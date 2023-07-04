@@ -18,3 +18,12 @@ mapId : (vec : IVect n tyf) ->
         map (\x => x) vec = vec
 mapId [] = Refl
 mapId (x :: xs) = rewrite mapId xs in Refl
+
+export
+mapTabulate : {n : Nat} ->
+              {0 tyf, tyf' : _} ->
+              (tf : (idx : Fin n) -> tyf idx) ->
+              (mf : tyf ~> tyf') ->
+              map mf (tabulate tf) = tabulate (\idx => mf (tf idx))
+mapTabulate {n = Z} tf mf = Refl
+mapTabulate {n = S n} tf mf = rewrite mapTabulate {n} (\idx => tf (FS idx)) (\y => mf y) in Refl
