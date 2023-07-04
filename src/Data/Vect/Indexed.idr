@@ -2,6 +2,8 @@ module Data.Vect.Indexed
 
 import public Data.Fin
 
+%default total
+
 public export
 data IVect : (n : Nat) -> (tyf : Fin n -> Type) -> Type where
   Nil  : IVect Z tyf
