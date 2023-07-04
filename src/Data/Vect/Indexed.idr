@@ -26,6 +26,13 @@ tabulate : {n : Nat} ->
 tabulate {n = Z} _ = Nil
 tabulate {n = S n} f = f FZ :: tabulate (\idx => f (FS idx))
 
+public export
+index : (1 idx : Fin n) ->
+        (1 vec : IVect n tyf) ->
+        tyf idx
+index FZ (x :: _) = x
+index (FS idx) (_ :: xs) = idx `index` xs
+
 infix 7 ~>
 public export
 (~>) : {n : Nat} -> (tyf, tyf' : TyF n) -> Type
