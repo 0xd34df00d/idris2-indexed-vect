@@ -18,6 +18,18 @@ data IVect : (n : Nat) -> (0 tyf : TyF n) -> Type where
 
 %name IVect xs, ys
 
+export
+{x : tyf _} -> Injective (Indexed.(::) {tyf} x) where
+  injective Refl = Refl
+
+export
+{xs : _} -> Injective (\x => Indexed.(::) {tyf} x xs) where
+  injective Refl = Refl
+
+export
+{tyf : _} -> Biinjective (Indexed.(::) {tyf}) where
+  biinjective Refl = (Refl, Refl)
+
 public export
 tabulate : {n : Nat} ->
            {0 tyf : _} ->
@@ -32,6 +44,7 @@ index : (1 idx : Fin n) ->
         tyf idx
 index FZ (x :: _) = x
 index (FS idx) (_ :: xs) = idx `index` xs
+
 
 infix 7 ~>
 public export
