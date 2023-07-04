@@ -60,6 +60,7 @@ map : {0 tyf' : _} ->
 map f [] = []
 map f (x :: xs) = f x :: map (\y => f y) xs
 
+export
 ({idx : Fin n} -> DecEq (tyf idx)) => DecEq (IVect n tyf) where
   decEq [] [] = Yes Refl
   decEq (x :: xs) (y :: ys) = decEqCong2 (x `decEq` y) (xs `decEq` ys)
