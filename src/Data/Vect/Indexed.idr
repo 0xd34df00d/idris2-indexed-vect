@@ -19,3 +19,11 @@ tabulate : {n : Nat} ->
            IVect n tyf
 tabulate {n = Z} _ = Nil
 tabulate {n = S n} f = f FZ :: tabulate (\idx => f (FS idx))
+
+public export
+map : {tyf' : _} ->
+      (f : (idx : Fin n) -> tyf idx -> tyf' idx) ->
+      IVect n tyf ->
+      IVect n tyf'
+map f [] = []
+map f (x :: xs) = f FZ x :: map (\idx, y => f (FS idx) y) xs
