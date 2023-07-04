@@ -1,6 +1,7 @@
 module Data.Vect.Indexed
 
 import public Data.Fin
+import Decidable.Equality
 
 %default total
 
@@ -58,3 +59,7 @@ map : {0 tyf' : _} ->
       IVect n tyf'
 map f [] = []
 map f (x :: xs) = f x :: map (\y => f y) xs
+
+({idx : Fin n} -> DecEq (tyf idx)) => DecEq (IVect n tyf) where
+  decEq [] [] = Yes Refl
+  decEq (x :: xs) (y :: ys) = decEqCong2 (x `decEq` y) (xs `decEq` ys)
