@@ -6,9 +6,11 @@ public export
 data IVect : (n : Nat) -> (tyf : Fin n -> Type) -> Type where
   Nil  : IVect Z tyf
   (::) : {tyf : Fin (S n) -> Type} ->
-         (val : tyf FZ) ->
-         IVect n (\idx => tyf (FS idx)) ->
+         (x : tyf FZ) ->
+         (xs : IVect n (\idx => tyf (FS idx))) ->
          IVect (S n) tyf
+
+%name IVect xs, ys
 
 public export
 tabulate : {n : Nat} ->
