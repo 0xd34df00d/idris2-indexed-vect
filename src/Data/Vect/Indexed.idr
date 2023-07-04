@@ -5,7 +5,11 @@ import public Data.Fin
 %default total
 
 public export
-data IVect : (n : Nat) -> (tyf : Fin n -> Type) -> Type where
+TyF : Nat -> Type
+TyF n = Fin n -> Type
+
+public export
+data IVect : (n : Nat) -> (tyf : TyF n) -> Type where
   Nil  : IVect Z tyf
   (::) : {tyf : Fin (S n) -> Type} ->
          (x : tyf FZ) ->
@@ -16,16 +20,21 @@ data IVect : (n : Nat) -> (tyf : Fin n -> Type) -> Type where
 
 public export
 tabulate : {n : Nat} ->
-           {tyf : Fin n -> Type} ->
+           {tyf : _} ->
            (f : (idx : Fin n) -> tyf idx) ->
            IVect n tyf
 tabulate {n = Z} _ = Nil
 tabulate {n = S n} f = f FZ :: tabulate (\idx => f (FS idx))
 
+infix 7 ~>
+public export
+(~>) : {n : Nat} -> (tyf, tyf' : TyF n) -> Type
+tyf ~> tyf' = {idx : Fin n} -> tyf idx -> tyf' idx
+
 public export
 map : {tyf' : _} ->
-      (f : (idx : Fin n) -> tyf idx -> tyf' idx) ->
+      (f : tyf ~> tyf') ->
       IVect n tyf ->
       IVect n tyf'
 map f [] = []
-map f (x :: xs) = f FZ x :: map (\idx, y => f (FS idx) y) xs
+map f (x :: xs) = f x :: map (\y => f y) xs
