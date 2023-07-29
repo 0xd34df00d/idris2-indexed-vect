@@ -72,3 +72,9 @@ toVect : IVect n tyf ->
          Vect n a
 toVect [] f = []
 toVect (x :: xs) f = f x :: toVect xs f
+
+public export
+fromVect : Vect n a ->
+           IVect n (const a)
+fromVect [] = []
+fromVect (x :: xs) = x :: fromVect xs
