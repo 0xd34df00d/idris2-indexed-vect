@@ -1,5 +1,6 @@
 module Data.Vect.Indexed
 
+import Data.Vect
 import public Data.Fin
 import Decidable.Equality
 
@@ -64,3 +65,10 @@ export
 ({idx : Fin n} -> DecEq (tyf idx)) => DecEq (IVect n tyf) where
   decEq [] [] = Yes Refl
   decEq (x :: xs) (y :: ys) = decEqCong2 (x `decEq` y) (xs `decEq` ys)
+
+public export
+toVect : IVect n tyf ->
+         ({idx : Fin n} -> tyf idx -> a) ->
+         Vect n a
+toVect [] f = []
+toVect (x :: xs) f = f x :: toVect xs f
