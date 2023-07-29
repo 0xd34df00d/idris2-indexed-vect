@@ -67,11 +67,11 @@ export
   decEq (x :: xs) (y :: ys) = decEqCong2 (x `decEq` y) (xs `decEq` ys)
 
 public export
-toVect : IVect n tyf ->
-         ({idx : Fin n} -> tyf idx -> a) ->
+toVect : ({idx : Fin n} -> tyf idx -> a) ->
+         IVect n tyf ->
          Vect n a
-toVect [] f = []
-toVect (x :: xs) f = f x :: toVect xs f
+toVect _ [] = []
+toVect f (x :: xs) = f x :: toVect f xs
 
 public export
 fromVect : Vect n a ->
