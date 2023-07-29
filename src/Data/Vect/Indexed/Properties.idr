@@ -1,5 +1,6 @@
 module Data.Vect.Indexed.Properties
 
+import Data.Vect
 import Data.Vect.Indexed
 
 %default total
@@ -27,3 +28,9 @@ mapTabulate : {n : Nat} ->
               map mf (tabulate tf) = tabulate (\idx => mf (tf idx))
 mapTabulate {n = Z} tf mf = Refl
 mapTabulate {n = S n} tf mf = rewrite mapTabulate {n} (\idx => tf (FS idx)) (\y => mf y) in Refl
+
+export
+fromVectToVectId : (xs : Vect n a) ->
+                   toVect (\a' => a') (fromVect xs) = xs
+fromVectToVectId [] = Refl
+fromVectToVectId (x :: xs) = rewrite fromVectToVectId xs in Refl
