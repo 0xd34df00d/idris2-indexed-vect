@@ -1,7 +1,7 @@
 module Data.Vect.Indexed
 
-import Data.Vect
 import public Data.Fin
+import Data.Vect
 import Decidable.Equality
 
 %default total
