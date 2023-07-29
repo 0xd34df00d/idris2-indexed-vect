@@ -18,7 +18,7 @@ data IVect : (n : Nat) -> (0 tyf : TyF n) -> Type where
          (xs : IVect n (\idx => tyf (FS idx))) ->
          IVect (S n) tyf
 
-%name IVect xs, ys
+%name IVect xs, ys, zs
 
 export
 {x : tyf _} -> Injective (Indexed.(::) {tyf} x) where
