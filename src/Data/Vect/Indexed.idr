@@ -78,3 +78,29 @@ fromVect : Vect n a ->
            IVect n (const a)
 fromVect [] = []
 fromVect (x :: xs) = x :: fromVect xs
+
+namespace Zippable
+  public export
+  zipTyF : (tyf0, tyf1 : TyF n) ->
+           TyF n
+  zipTyF tyf0 tyf1 = \idx => (tyf0 idx, tyf1 idx)
+
+  public export
+  zip3TyF : (tyf0, tyf1, tyf2 : TyF n) ->
+            TyF n
+  zip3TyF tyf0 tyf1 tyf2 = \idx => (tyf0 idx, tyf1 idx, tyf2 idx)
+
+  public export
+  zip : IVect n tyf0 ->
+        IVect n tyf1 ->
+        IVect n (zipTyF tyf0 tyf1)
+  [] `zip` [] = []
+  (x :: xs) `zip` (y :: ys) = (x, y) :: (xs `zip` ys)
+
+  public export
+  zip3 : IVect n tyf0 ->
+         IVect n tyf1 ->
+         IVect n tyf2 ->
+         IVect n (zip3TyF tyf0 tyf1 tyf2)
+  zip3 [] [] [] = []
+  zip3 (x :: xs) (y :: ys) (z :: zs) = (x, y, z) :: zip3 xs ys zs
