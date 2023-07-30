@@ -98,6 +98,11 @@ namespace Zippable
   (x :: xs) `zip` (y :: ys) = (x, y) :: (xs `zip` ys)
 
   public export
+  zip' : (IVect n tyf0, IVect n tyf1) ->
+         IVect n (zipTyF tyf0 tyf1)
+  zip' (xs, ys) = zip xs ys
+
+  public export
   zip3 : IVect n tyf0 ->
          IVect n tyf1 ->
          IVect n tyf2 ->
