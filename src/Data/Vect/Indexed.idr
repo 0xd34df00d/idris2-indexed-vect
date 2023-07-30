@@ -111,8 +111,20 @@ namespace Zippable
   zip3 (x :: xs) (y :: ys) (z :: zs) = (x, y, z) :: zip3 xs ys zs
 
   public export
+  zip3' : (IVect n tyf0, IVect n tyf1, IVect n tyf2) ->
+          IVect n (zip3TyF tyf0 tyf1 tyf2)
+  zip3' (xs, ys, zs) = zip3 xs ys zs
+
+  public export
   unzip : IVect n (zipTyF tyf0 tyf1) ->
           (IVect n tyf0, IVect n tyf1)
   unzip [] = ([], [])
   unzip ((x0, x1) :: xs) = let (xs0, xs1) = unzip xs
                             in (x0 :: xs0, x1 :: xs1)
+
+  public export
+  unzip3 : IVect n (zip3TyF tyf0 tyf1 tyf2) ->
+           (IVect n tyf0, IVect n tyf1, IVect n tyf2)
+  unzip3 [] = ([], [], [])
+  unzip3 ((x0, x1, x2) :: xs) = let (xs0, xs1, xs2) = unzip3 xs
+                                 in (x0 :: xs0, x1 :: xs1, x2 :: xs2)
