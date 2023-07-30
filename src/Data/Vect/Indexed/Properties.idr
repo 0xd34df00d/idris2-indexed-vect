@@ -34,3 +34,17 @@ fromVectToVectId : (xs : Vect n a) ->
                    toVect (\a' => a') (fromVect xs) = xs
 fromVectToVectId [] = Refl
 fromVectToVectId (x :: xs) = rewrite fromVectToVectId xs in Refl
+
+export
+unzipZipId : (xs : IVect n tyf0) ->
+             (ys : IVect n tyf1) ->
+             unzip (zip xs ys) = (xs, ys)
+unzipZipId [] [] = Refl
+unzipZipId (x :: xs) (y :: ys) = rewrite unzipZipId xs ys in Refl
+
+export
+zipUnzipId : (xs : IVect n (zipTyF tyf0 tyf1)) ->
+             zip' (unzip xs) = xs
+zipUnzipId [] = Refl
+zipUnzipId ((x0, x1) :: xs) with (zipUnzipId xs) | (unzip xs)
+  _ | rec | (xs0, xs1) = rewrite rec in Refl
