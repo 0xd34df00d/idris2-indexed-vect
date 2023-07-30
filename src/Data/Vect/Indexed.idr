@@ -59,7 +59,7 @@ map : {0 tyf' : _} ->
       IVect n tyf ->
       IVect n tyf'
 map f [] = []
-map f (x :: xs) = f x :: map (\y => f y) xs
+map f (x :: xs) = f x :: map f xs
 
 export
 ({idx : Fin n} -> DecEq (tyf idx)) => DecEq (IVect n tyf) where
