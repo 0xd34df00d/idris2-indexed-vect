@@ -54,12 +54,17 @@ public export
 tyf ~> tyf' = {idx : Fin n} -> tyf idx -> tyf' idx
 
 public export
-map : {0 tyf' : _} ->
-      (f : tyf ~> tyf') ->
+shift : {0 tyf, tyf' : TyF (S n)} ->
+        (f : tyf ~> tyf') ->
+        {idx : Fin n} -> tyf (FS idx) -> tyf' (FS idx)
+shift f = f
+
+public export
+map : (f : tyf ~> tyf') ->
       IVect n tyf ->
       IVect n tyf'
 map f [] = []
-map f (x :: xs) = f x :: map f xs
+map f (x :: xs) = f x :: map (shift {tyf} f) xs
 
 export
 ({idx : Fin n} -> DecEq (tyf idx)) => DecEq (IVect n tyf) where
@@ -130,18 +135,18 @@ namespace Zippable
                                  in (x0 :: xs0, x1 :: xs1, x2 :: xs2)
 
   public export
-  zipWith : (forall idx. tyf0 idx -> tyf1 idx -> tyf2 idx) ->
+  zipWith : ({idx : _} -> tyf0 idx -> tyf1 idx -> tyf2 idx) ->
             IVect n tyf0 ->
             IVect n tyf1 ->
             IVect n tyf2
   zipWith f [] [] = []
-  zipWith f (x :: xs) (y :: ys) = f x y :: zipWith f xs ys
+  zipWith f (x :: xs) (y :: ys) = f x y :: zipWith (\y => f y) xs ys
 
   public export
-  zipWith3 : (forall idx. tyf0 idx -> tyf1 idx -> tyf2 idx -> tyf3 idx) ->
+  zipWith3 : ({idx : _} -> tyf0 idx -> tyf1 idx -> tyf2 idx -> tyf3 idx) ->
              IVect n tyf0 ->
              IVect n tyf1 ->
              IVect n tyf2 ->
              IVect n tyf3
   zipWith3 f [] [] [] = []
-  zipWith3 f (x :: xs) (y :: ys) (z :: zs) = f x y z :: zipWith3 f xs ys zs
+  zipWith3 f (x :: xs) (y :: ys) (z :: zs) = f x y z :: zipWith3 (\y => f y) xs ys zs
