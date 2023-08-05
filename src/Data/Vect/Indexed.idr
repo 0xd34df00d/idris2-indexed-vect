@@ -150,3 +150,17 @@ namespace Zippable
              IVect n tyf3
   zipWith3 f [] [] [] = []
   zipWith3 f (x :: xs) (y :: ys) (z :: zs) = f x y z :: zipWith3 (\y => f y) xs ys zs
+
+namespace Foldable
+  public export
+  null : IVect n tyf -> Bool
+  null [] = False
+  null (_ :: _) = True
+
+  public export
+  foldMap : Monoid m =>
+            ({idx : Fin n} -> tyf idx -> m) ->
+            IVect n tyf ->
+            m
+  foldMap f [] = neutral
+  foldMap f (x :: xs) = f x <+> foldMap f xs
