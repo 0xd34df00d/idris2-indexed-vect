@@ -164,3 +164,30 @@ namespace Foldable
             m
   foldMap f [] = neutral
   foldMap f (x :: xs) = f x <+> foldMap f xs
+
+  last' : (n : _) -> Fin (S n)
+  last' Z = FZ
+  last' (S n) = FS (last' n)
+
+  complementLast : (n : _) ->
+                   complement (last' n) = FZ
+  complementLast Z = Refl
+  complementLast (S n) = rewrite complementLast n in Refl
+
+  complementWeaken : (x : Fin n) ->
+                     complement (weaken x) = FS (complement x)
+  complementWeaken FZ = Refl
+  complementWeaken (FS x) = rewrite complementWeaken x in Refl
+
+  foldr : {n : _} ->
+          {0 tyf : TyF n} ->
+          {0 accTy : TyF (S n)} ->
+          (f : (len : Fin n) -> tyf (complement len) -> accTy (weaken len) -> accTy (FS len)) ->
+          (acc : accTy FZ) ->
+          (xs : IVect n tyf) ->
+          accTy (last' n)
+  foldr _ acc [] = acc
+  foldr {n = S n} f acc (x :: xs) =
+    let f' = \len, elt, acc' => f (weaken len) (rewrite complementWeaken len in elt) acc'
+        rec = foldr {accTy = accTy . weaken} f' acc xs
+     in f _ (rewrite complementLast n in x) rec
