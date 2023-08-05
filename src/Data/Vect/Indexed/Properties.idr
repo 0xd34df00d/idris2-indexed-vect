@@ -78,3 +78,12 @@ zipWith3Comma : (xs : IVect n tyf0) ->
                 zipWith3 (\x, y, z => (x, y, z)) xs ys zs = zip3 xs ys zs
 zipWith3Comma [] [] [] = Refl
 zipWith3Comma (x :: xs) (y :: ys) (z :: zs) = rewrite zipWith3Comma xs ys zs in Refl
+
+export
+zipWithIsMap : {0 tyf0, tyf1, tyf2 : TyF n} ->
+               (f : {idx : Fin n} -> (tyf0 idx, tyf1 idx) -> tyf2 idx) ->
+               (xs : IVect n tyf0) ->
+               (ys : IVect n tyf1) ->
+               zipWith (\p, q => f (p, q)) xs ys = map f (zip xs ys)
+zipWithIsMap f [] [] = Refl
+zipWithIsMap f (x :: xs) (y :: ys) = rewrite zipWithIsMap (\y => f y) xs ys in Refl
