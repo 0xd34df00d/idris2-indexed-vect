@@ -87,3 +87,13 @@ zipWithIsMap : {0 tyf0, tyf1, tyf2 : TyF n} ->
                zipWith (\p, q => f (p, q)) xs ys = map f (zip xs ys)
 zipWithIsMap f [] [] = Refl
 zipWithIsMap f (x :: xs) (y :: ys) = rewrite zipWithIsMap (\y => f y) xs ys in Refl
+
+export
+zipWith3IsMap : {0 tyf0, tyf1, tyf2, tyf3 : TyF n} ->
+                (f : {idx : Fin n} -> (tyf0 idx, tyf1 idx, tyf2 idx) -> tyf3 idx) ->
+                (xs : IVect n tyf0) ->
+                (ys : IVect n tyf1) ->
+                (zs : IVect n tyf2) ->
+                zipWith3 (\p, q, r => f (p, q, r)) xs ys zs = map f (zip3 xs ys zs)
+zipWith3IsMap f [] [] [] = Refl
+zipWith3IsMap f (x :: xs) (y :: ys) (z :: zs) = rewrite zipWith3IsMap (\y => f y) xs ys zs in Refl
