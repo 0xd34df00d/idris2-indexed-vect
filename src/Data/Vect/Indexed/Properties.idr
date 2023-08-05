@@ -63,3 +63,18 @@ zip3Unzip3Id : (xs : IVect n (zip3TyF tyf0 tyf1 tyf2)) ->
 zip3Unzip3Id [] = Refl
 zip3Unzip3Id ((_, _, _) :: xs) with (zip3Unzip3Id xs) | (unzip3 xs)
   _ | rec | (_, _, _) = rewrite rec in Refl
+
+export
+zipWithComma : (xs : IVect n tyf0) ->
+               (ys : IVect n tyf1) ->
+               zipWith (,) xs ys = zip xs ys
+zipWithComma [] [] = Refl
+zipWithComma (x :: xs) (y :: ys) = rewrite zipWithComma xs ys in Refl
+
+export
+zipWith3Comma : (xs : IVect n tyf0) ->
+                (ys : IVect n tyf1) ->
+                (zs : IVect n tyf2) ->
+                zipWith3 (\x, y, z => (x, y, z)) xs ys zs = zip3 xs ys zs
+zipWith3Comma [] [] [] = Refl
+zipWith3Comma (x :: xs) (y :: ys) (z :: zs) = rewrite zipWith3Comma xs ys zs in Refl
