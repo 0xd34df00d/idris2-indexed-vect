@@ -137,10 +137,19 @@ voldrConsAcc : (0 tyf : TyF n) ->
                TyF (S n)
 voldrConsAcc tyf len = IVect (finToNat len) (\idx => tyf (len +! idx))
 
+voldrConsFun : (0 tyf : TyF n) ->
+               (idx : Fin n) ->
+               (len : Fin n) ->
+               idx = complement len ->
+               tyf idx ->
+               voldrConsAcc tyf (weaken len) ->
+               voldrConsAcc tyf (FS len)
+voldrConsFun tyf idx len prf x acc = let res = x :: acc in ?rhs
+
 export
 voldrConsId : {n : _} ->
               {0 tyf : TyF n} ->
               (xs : IVect n tyf) ->
-              voldr {accTy = voldrConsAcc tyf} ?wf ?wacc xs
-              =
-              (rewrite finToNatLast n in xs)
+              voldr {accTy = voldrConsAcc tyf} (voldrConsFun tyf) [] xs
+              ~=~
+              xs
