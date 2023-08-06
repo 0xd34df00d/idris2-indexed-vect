@@ -97,3 +97,16 @@ zipWith3IsMap : {0 tyf0, tyf1, tyf2, tyf3 : TyF n} ->
                 zipWith3 (\p, q, r => f (p, q, r)) xs ys zs = map f (zip3 xs ys zs)
 zipWith3IsMap f [] [] [] = Refl
 zipWith3IsMap f (x :: xs) (y :: ys) (z :: zs) = rewrite zipWith3IsMap (\y => f y) xs ys zs in Refl
+
+finToNatLast : (n : _) ->
+               finToNat (last' n) = n
+finToNatLast Z = Refl
+finToNatLast (S n) = cong S (finToNatLast n)
+
+export
+voldrConsId : {n : _} ->
+              {0 tyf : TyF n} ->
+              (xs : IVect n tyf) ->
+              voldr {accTy = \len => IVect (finToNat len) ?wtyf} ?wf ?wacc xs
+              =
+              (rewrite finToNatLast n in xs)
