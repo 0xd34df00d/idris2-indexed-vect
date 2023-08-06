@@ -137,10 +137,14 @@ plusFull : {n : _} ->
            (idx : Fin (finToNat (last' n))) ->
            last' n +! idx = idx
 
+voldrConsAcc : (0 tyf : TyF n) ->
+               TyF (S n)
+voldrConsAcc tyf len = IVect (finToNat len) (\idx => tyf (len +! idx))
+
 export
 voldrConsId : {n : _} ->
               {0 tyf : TyF n} ->
               (xs : IVect n tyf) ->
-              voldr {accTy = \len => IVect (finToNat len) (\idx => tyf (len +! idx))} ?wf ?wacc xs
+              voldr {accTy = voldrConsAcc tyf} ?wf ?wacc xs
               =
               (rewrite finToNatLast n in xs)
