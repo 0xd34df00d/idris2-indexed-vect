@@ -133,10 +133,6 @@ infix 8 +!
  _ | S n' = let lte = lteLemma n' n len p
              in coerce (rewrite p in plusMinusLte _ _ lte) $ (n -? len) ?+? idx
 
-plusFull : {n : _} ->
-           (idx : Fin (finToNat (last' n))) ->
-           last' n +! idx = idx
-
 voldrConsAcc : (0 tyf : TyF n) ->
                TyF (S n)
 voldrConsAcc tyf len = IVect (finToNat len) (\idx => tyf (len +! idx))
