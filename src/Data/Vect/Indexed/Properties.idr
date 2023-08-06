@@ -103,10 +103,40 @@ finToNatLast : (n : _) ->
 finToNatLast Z = Refl
 finToNatLast (S n) = cong S (finToNatLast n)
 
+infixl 8 -?
+(-?) : (n : _) -> (x : Fin (S n)) -> Fin (S n `minus` finToNat x)
+n -? FZ = last' n
+S n -? FS x = n -? x
+
+infixl 8 ?+?
+(?+?) : {m, n : _} -> Fin m -> Fin (S n) -> Fin (m + n)
+(?+?) {m = S m} FZ y = weakenLTE y (LTESucc (rewrite plusCommutative m n in lteAddRight _))
+(?+?) {m = S _} (FS x) y = FS (x ?+? y)
+
+lteLemma : (n', n : _) ->
+           (len : Fin (S n)) ->
+           finToNat len = S n' ->
+           n' `LTE` n
+lteLemma 0 _ _ _ = LTEZero
+lteLemma (S _) 0 FZ Refl impossible
+lteLemma (S _) 0 (FS x) _ = absurd x
+lteLemma (S _) (S n) FZ Refl impossible
+lteLemma (S n') (S n) (FS x) prf = LTESucc $ lteLemma n' n x (injective prf)
+
+infix 8 +!
+(+!) : {n : _} ->
+       (len : Fin (S n)) ->
+       (idx : Fin (finToNat len)) ->
+       Fin n
+(+!) len idx with (finToNat len) proof p
+ _ | Z = absurd idx
+ _ | S n' = let lte = lteLemma n' n len p
+             in coerce (rewrite p in plusMinusLte _ _ lte) $ (n -? len) ?+? idx
+
 export
 voldrConsId : {n : _} ->
               {0 tyf : TyF n} ->
               (xs : IVect n tyf) ->
-              voldr {accTy = \len => IVect (finToNat len) ?wtyf} ?wf ?wacc xs
+              voldr {accTy = \len => IVect (finToNat len) (\idx => tyf (len +! idx))} ?wf ?wacc xs
               =
               (rewrite finToNatLast n in xs)
