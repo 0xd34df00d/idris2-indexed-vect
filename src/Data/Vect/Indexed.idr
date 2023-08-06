@@ -178,20 +178,26 @@ namespace Foldable
 
   public export
   complementWeaken : (x : Fin n) ->
-                     complement (weaken x) = FS (complement x)
+                     FS (complement x) = complement (weaken x)
   complementWeaken FZ = Refl
-  complementWeaken (FS x) = rewrite complementWeaken x in Refl
+  complementWeaken (FS x) = rewrite sym $ complementWeaken x in Refl
+
+  public export
+  complementWeaken' : {x, y : _} ->
+                      x = complement y ->
+                      FS x = complement (weaken y)
+  complementWeaken' Refl = complementWeaken y
 
   public export
   voldr : {n : _} ->
           {0 tyf : TyF n} ->
           {0 accTy : TyF (S n)} ->
-          (f : (len : Fin n) -> tyf (complement len) -> accTy (weaken len) -> accTy (FS len)) ->
+          (f : (idx, len : Fin n) -> idx = complement len -> tyf idx -> accTy (weaken len) -> accTy (FS len)) ->
           (acc : accTy FZ) ->
           (xs : IVect n tyf) ->
           accTy (last' n)
   voldr _ acc [] = acc
   voldr {n = S n} f acc (x :: xs) =
-    let f' = \len, elt, acc' => f (weaken len) (rewrite complementWeaken len in elt) acc'
+    let f' = \idx, len, prf, elt, acc' => f (FS idx) (weaken len) (complementWeaken' prf) elt acc'
         rec = voldr {accTy = accTy . weaken} f' acc xs
-     in f _ (rewrite complementLast n in x) rec
+     in f _ _ (sym $ complementLast _) x rec
