@@ -165,20 +165,24 @@ namespace Foldable
   foldMap f [] = neutral
   foldMap f (x :: xs) = f x <+> foldMap f xs
 
+  public export
   last' : (n : _) -> Fin (S n)
   last' Z = FZ
   last' (S n) = FS (last' n)
 
+  public export
   complementLast : (n : _) ->
                    complement (last' n) = FZ
   complementLast Z = Refl
   complementLast (S n) = rewrite complementLast n in Refl
 
+  public export
   complementWeaken : (x : Fin n) ->
                      complement (weaken x) = FS (complement x)
   complementWeaken FZ = Refl
   complementWeaken (FS x) = rewrite complementWeaken x in Refl
 
+  public export
   foldr : {n : _} ->
           {0 tyf : TyF n} ->
           {0 accTy : TyF (S n)} ->
