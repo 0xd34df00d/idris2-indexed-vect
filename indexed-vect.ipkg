@@ -6,5 +6,6 @@ license = "BSD-3-Clause"
 sourcedir = "src"
 
 depends = base
+        , contrib
 
 modules = Data.Vect.Indexed
