@@ -2,6 +2,7 @@ module Data.Vect.Indexed.Properties
 
 import Data.Vect
 import Data.Vect.Indexed
+import Data.Vect.Indexed.Helpers
 
 %default total
 
@@ -97,11 +98,6 @@ zipWith3IsMap : {0 tyf0, tyf1, tyf2, tyf3 : TyF n} ->
                 zipWith3 (\p, q, r => f (p, q, r)) xs ys zs = map f (zip3 xs ys zs)
 zipWith3IsMap f [] [] [] = Refl
 zipWith3IsMap f (x :: xs) (y :: ys) (z :: zs) = rewrite zipWith3IsMap (\y => f y) xs ys zs in Refl
-
-finToNatLast : (n : _) ->
-               finToNat (last' n) = n
-finToNatLast Z = Refl
-finToNatLast (S n) = cong S (finToNatLast n)
 
 infixl 8 -?
 (-?) : (n : _) -> (x : Fin (S n)) -> Fin (S n `minus` finToNat x)

@@ -9,4 +9,5 @@ depends = base
         , contrib
 
 modules = Data.Vect.Indexed
+        , Data.Vect.Indexed.Helpers
         , Data.Vect.Indexed.Properties

@@ -2,6 +2,7 @@ module Data.Vect.Indexed
 
 import public Data.Fin
 import Data.Vect
+import Data.Vect.Indexed.Helpers
 import Decidable.Equality
 
 %default total
@@ -164,29 +165,6 @@ namespace Foldable
             m
   foldMap f [] = neutral
   foldMap f (x :: xs) = f x <+> foldMap f xs
-
-  public export
-  last' : (n : _) -> Fin (S n)
-  last' Z = FZ
-  last' (S n) = FS (last' n)
-
-  public export
-  complementLast : (n : _) ->
-                   complement (last' n) = FZ
-  complementLast Z = Refl
-  complementLast (S n) = rewrite complementLast n in Refl
-
-  public export
-  complementWeaken : (x : Fin n) ->
-                     FS (complement x) = complement (weaken x)
-  complementWeaken FZ = Refl
-  complementWeaken (FS x) = rewrite sym $ complementWeaken x in Refl
-
-  public export
-  complementWeaken' : {x, y : _} ->
-                      x = complement y ->
-                      FS x = complement (weaken y)
-  complementWeaken' Refl = complementWeaken y
 
   public export
   voldr : {n : _} ->
